@@ -1,6 +1,7 @@
 <?php
 use App\Concert;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Http\UploadedFile;
 
 /**
  * Created by PhpStorm.
