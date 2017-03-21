@@ -1,4 +1,6 @@
 <?php
+use App\Concert;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 /**
  * Created by PhpStorm.
@@ -8,10 +10,12 @@
  */
 class ViewConcertListingTest extends Tests\TestCase
 {
+    use DatabaseMigrations;
+
     /** @test */
     public function user_can_view_a_concert_listing()
     {
-        $concert = Concert::create([
+        $concert = App\Concert::create([
             'title' => 'The Red Chord',
             'subtitle' => 'Some cool subtitle',
             'date' => Carbon\Carbon::parse('December 13, 2106 8:00pm'),
@@ -24,22 +28,19 @@ class ViewConcertListingTest extends Tests\TestCase
             'additional_information' => 'For tickets, call (555) 555-5555.'
         ]);
 
+        $response = $this->get('/concerts/' . $concert->id);
 
+        $response->assertSee('The Red Chord');
+        $response->assertSee('Some cool subtitle');
+        $response->assertSee('December 13, 2106');
+        $response->assertSee('8:00pm');
+        $response->assertSee('32.50');
+        $response->assertSee('The Mosh Pit');
+        $response->assertSee('123 Example');
+        $response->assertSee('Bludville');
+        $response->assertSee('ON');
+        $response->assertSee('1796');
+        $response->assertSee('For tickets, call (555) 555-5555.');
 
-        $this->visit('/concerts/'.$concert->id);
-
-
-
-        $this->see('The Red Chord');
-        $this->see('Some cool subtitle');
-        $this->see('December 13, 2106');
-        $this->see('8:00pm');
-        $this->see('32.50');
-        $this->see('The Mosh Pit');
-        $this->see('123 Example');
-        $this->see('Bludville');
-        $this->see('ON');
-        $this->see('1796');
-        $this->see('For tickets, call (555) 555-5555.');
     }
 }
