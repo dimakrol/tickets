@@ -16,18 +16,7 @@ class ViewConcertListingTest extends Tests\TestCase
     /** @test */
     public function user_can_view_a_concert_listing()
     {
-        $concert = App\Concert::create([
-            'title' => 'The Red Chord',
-            'subtitle' => 'Some cool subtitle',
-            'date' => Carbon\Carbon::parse('December 13, 2106 8:00pm'),
-            'ticket_price' => 3250,
-            'venue' => 'The Mosh Pit',
-            'venue_address' => '123 Example',
-            'city' => 'Bludville',
-            'state' => 'ON',
-            'zip' => '1796',
-            'additional_information' => 'For tickets, call (555) 555-5555.'
-        ]);
+
 
         $response = $this->get('/concerts/' . $concert->id);
 
