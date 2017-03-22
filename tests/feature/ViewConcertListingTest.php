@@ -15,19 +15,10 @@ class ViewConcertListingTest extends Tests\TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function user_can_view_a_concert_listing()
+    public function user_can_view_a_published_concert_listing()
     {
-        $concert = Concert::create([
-            'title' => 'The Red Chord',
-            'subtitle' => 'Some cool subtitle',
-            'date' => Carbon::parse('2016-12-13 8:00pm'),
-            'ticket_price' => 3250,
-            'venue' => 'The Mosh Pit',
-            'venue_address' => '123 Example',
-            'city' => 'Bludville',
-            'state' => 'ON',
-            'zip' => '1796',
-            'additional_information' => 'For tickets, call (555) 555-5555.'
+        $concert = factory(Concert::class)->states('published')->create([
+            'date' => Carbon::parse('2016-12-13 20:00:00'),
         ]);
 
         $response = $this->get('/concerts/' . $concert->id);
@@ -44,5 +35,29 @@ class ViewConcertListingTest extends Tests\TestCase
         $response->assertSee('1796');
         $response->assertSee('For tickets, call (555) 555-5555.');
 
+    }
+
+    /** @test */
+    function user_cannot_view_unpublished_concert_listings()
+    {
+        $concert = factory(Concert::class)->states('unpublished')->create();
+
+        $response = $this->get('/concerts/' . $concert->id);
+
+        $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function concerts_with_a_published_at_date_are_published()
+    {
+        $publishedConcertA = factory(Concert::class)->states('published')->create();
+        $publishedConcertB = factory(Concert::class)->states('published')->create();
+        $unPublishedConcert = factory(Concert::class)->states('unpublished')->create();
+
+        $publishedConcerts = Concert::published()->get();
+
+        $this->assertTrue($publishedConcerts->contains($publishedConcertA));
+        $this->assertTrue($publishedConcerts->contains($publishedConcertB));
+        $this->assertFalse($publishedConcerts->contains($unPublishedConcert));
     }
 }
