@@ -1,8 +1,8 @@
 {{ $concert->title }}
 {{ $concert->subtitle }}
-{{ $concert->date->format('g:ia') }}
+{{ $concert->formatted_start_time }}
 {{ $concert->formatted_date }}
-{{ number_format($concert->ticket_price / 100, 2) }}
+{{ $concert->ticket_price_in_dollars }}
 {{ $concert->venue }}
 {{ $concert->venue_address }}
 {{ $concert->city }}
