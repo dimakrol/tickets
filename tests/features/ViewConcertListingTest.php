@@ -43,21 +43,9 @@ class ViewConcertListingTest extends Tests\TestCase
         $concert = factory(Concert::class)->states('unpublished')->create();
 
         $response = $this->get('/concerts/' . $concert->id);
-
+//
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function concerts_with_a_published_at_date_are_published()
-    {
-        $publishedConcertA = factory(Concert::class)->states('published')->create();
-        $publishedConcertB = factory(Concert::class)->states('published')->create();
-        $unPublishedConcert = factory(Concert::class)->states('unpublished')->create();
 
-        $publishedConcerts = Concert::published()->get();
-
-        $this->assertTrue($publishedConcerts->contains($publishedConcertA));
-        $this->assertTrue($publishedConcerts->contains($publishedConcertB));
-        $this->assertFalse($publishedConcerts->contains($unPublishedConcert));
-    }
 }

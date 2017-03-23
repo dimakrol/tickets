@@ -41,4 +41,29 @@ class ConcertTest extends TestCase
 
         $this->assertEquals('35.90', $concert->ticket_price_in_dollars);
     }
+
+    /** @test */
+    public function concerts_with_a_published_at_date_are_published()
+    {
+        $publishedConcertA = factory(Concert::class)->states('published')->create();
+        $publishedConcertB = factory(Concert::class)->states('published')->create();
+        $unPublishedConcert = factory(Concert::class)->states('unpublished')->create();
+
+        $publishedConcerts = Concert::published()->get();
+
+        $this->assertTrue($publishedConcerts->contains($publishedConcertA));
+        $this->assertTrue($publishedConcerts->contains($publishedConcertB));
+        $this->assertFalse($publishedConcerts->contains($unPublishedConcert));
+    }
+
+    /** @test */
+    public function can_order_concert_tickets()
+    {
+        $concert = factory(Concert::class)->create();
+
+        $order = $concert->orderTickets('jane@example.com', 3);
+
+        $this->assertEquals('jane@example.com', $order->email);
+        $this->assertEquals(3, $order->tickets()->count());
+    }
 }
